@@ -46,23 +46,6 @@ impl de::Deserialize for DeDuration {
                     Err(e) => Err(E::invalid_value(&e.to_string())),
                 }
             }
-
-            // for back-compat
-            fn visit_i64<E>(&mut self, v: i64) -> Result<DeDuration, E>
-                where E: de::Error
-            {
-                if v < 0 {
-                    return Err(E::invalid_value("Duration cannot be negative"));
-                }
-                Ok(DeDuration(Duration::from_secs(v as u64)))
-            }
-
-            fn visit_u64<E>(&mut self, v: u64) -> Result<DeDuration, E>
-                where E: de::Error
-            {
-                // for back-compat
-                Ok(DeDuration(Duration::from_secs(v)))
-            }
         }
 
         d.deserialize(V)
